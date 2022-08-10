@@ -4,11 +4,17 @@ import pandas as pd
 import helper
 import preprocessor
 
+from PIL import Image
+
+image = Image.open('olympic_logo1.jpg')
+
+st.sidebar.image(image, width=250)
+
 df = pd.read_csv('athlete_events.csv')
 region_df = pd.read_csv('noc_regions.csv')
 
 df = preprocessor.preprocess(df, region_df)
-
+st.sidebar.header("Olympic Analysis")
 user_menu = st.sidebar.radio(
     'Select an Option',
     ('Medal Tally', 'Overall Analysis', 'Country-wise Analysis', 'Athlete wise Analysis')
@@ -34,3 +40,48 @@ if user_menu == 'Medal Tally':
         st.title(str(selected_country) + ' at the ' + str(selected_year) + ' Summer Olympics')
 
     st.table(medal_tally)
+
+if user_menu == 'Overall Analysis':
+    edition = len(df['Year'].unique())
+    cities = len(df['City'].unique())
+    regions = len(df['region'].unique())
+    sports = len(df['Sport'].unique())
+    events = len(df['Event'].unique())
+    athletes = len(df['Name'].unique())
+    st.title('Top Statistics')
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.subheader('Editions')
+        st.title(edition)
+    with col2:
+        st.subheader('Hosts')
+        st.title(cities)
+    with col3:
+        st.subheader('Sports')
+        st.title(sports)
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.subheader('Events')
+        st.title(events)
+    with col2:
+        st.subheader('Region')
+        st.title(regions)
+    with col3:
+        st.subheader('Athletes')
+        st.title(athletes)
+    st.header('Participating Nations Over the Years')
+    figure = helper.nations_over_time(df)
+    st.plotly_chart(figure)
+
+
+
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
