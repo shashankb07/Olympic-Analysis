@@ -1,5 +1,8 @@
+import matplotlib as matplotlib
 import numpy as np
 import plotly.express as px
+import seaborn as sns
+from matplotlib import pyplot as plt
 
 
 def fetch_medal_tally(df, year, country):
@@ -45,8 +48,23 @@ def country_year_list(df):
 def nations_over_time(df):
     nations_over_time = df.drop_duplicates(['Year', 'region'])['Year'].value_counts().reset_index().sort_values(
         'index')
-    nations_over_time.rename(columns={'index': 'Years', 'Year': 'Total Nations'}, inplace=True)
-    fig = px.line(nations_over_time, x="Years", y="Total Nations", title='test')
+    nations_over_time.rename(columns={'index': 'Years', 'Year': 'Participated Nations'}, inplace=True)
+    fig = px.line(nations_over_time, x="Years", y="Participated Nations")
+    return fig
+
+
+def Athletes_over_time(df):
+    Athletes_over_time = df.drop_duplicates(['Year', 'Name'])['Year'].value_counts().reset_index().sort_values(
+        'index')
+    Athletes_over_time.rename(columns={'index': 'Years', 'Year': 'Athletes Participated'}, inplace=True)
+    fig = px.line(Athletes_over_time, x="Years", y="Athletes Participated")
+    return fig
+
+def events_over_time(df):
+    events_over_time = df.drop_duplicates(['Year', 'Event'])['Year'].value_counts().reset_index().sort_values(
+        'index')
+    events_over_time.rename(columns={'index': 'Years', 'Year': 'Events'}, inplace=True)
+    fig = px.line(events_over_time, x="Years", y="Events")
     return fig
 
 

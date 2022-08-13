@@ -1,5 +1,8 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
+import seaborn as sns
+from matplotlib import pyplot as plt
 
 import helper
 import preprocessor
@@ -70,11 +73,26 @@ if user_menu == 'Overall Analysis':
     with col3:
         st.subheader('Athletes')
         st.title(athletes)
+
     st.header('Participating Nations Over the Years')
     figure = helper.nations_over_time(df)
     st.plotly_chart(figure)
 
+    st.header('Athletes Over the Years')
+    figure = helper.Athletes_over_time(df)
+    st.plotly_chart(figure)
 
+    st.header('Events Over the Years')
+    figure = helper.events_over_time(df)
+    st.plotly_chart(figure)
+
+    st.header('Number of Events over the Time')
+    fig, ax = plt.subplots(figsize = (25,25))
+    heatmap_df = df.drop_duplicates(['Year', 'Sport', 'Event'])
+    ax = sns.heatmap(
+        heatmap_df.pivot_table(index='Sport', columns='Year', values='Event', aggfunc='count').fillna(0).astype('int'),
+        annot=True)
+    st.pyplot(fig)
 
 hide_st_style = """
             <style>
