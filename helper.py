@@ -68,4 +68,15 @@ def events_over_time(df):
     return fig
 
 
+def multiple_medalist(df, Sport):
+    multiple_medalist = df.dropna(subset=['Medal'])
+
+    if Sport != 'Overall':
+        multiple_medalist = multiple_medalist[multiple_medalist['Sport'] == Sport]
+    multiple_medalist = multiple_medalist['Name'].value_counts().reset_index()
+    multiple_medalist = multiple_medalist.head(15).merge(df, left_on='index', right_on='Name', how='left')[
+        ['index', 'region', 'Sport', 'Name_x']].drop_duplicates('index')
+    multiple_medalist = multiple_medalist.rename(columns={"index": "Name", "Name_x": "Total"})
+
+    return multiple_medalist
 
