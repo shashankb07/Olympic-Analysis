@@ -103,6 +103,26 @@ if user_menu == 'Overall Analysis':
     top_medalist = helper.multiple_medalist(df, selected_sport)
     st.table(top_medalist)
 
+if user_menu == 'Country-wise Analysis':
+
+    st.title('Country-Wise Analysis')
+    selected_country = helper.country_list(df)
+    country = st.selectbox('Select A Country', selected_country)
+
+    country_medals = helper.countryWise_Medal(df, country)
+    st.header(str(country) + ' at the Olympics ')
+    st.plotly_chart(country_medals)
+    st.header('heatmap of medals  won by '+ str(country))
+    heatmap_region = helper.countryWise_Heatmap(df, country)
+    heatmap = helper.countryWise_Heatmap(df, country)
+    f, ax = plt.subplots(figsize=(30, 30))
+    sns.heatmap(heatmap, annot=True, ax=ax)
+    st.pyplot(f)
+    st.header(str(country)+"'s Top 10 athletes")
+    countryWise_performer = helper.country_multiple_medalist(df, country)
+    st.table(countryWise_performer)
+
+
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
@@ -111,71 +131,3 @@ hide_st_style = """
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
-
-
-
-import streamlit as st
-from htbuilder import HtmlElement, div, ul, li, br, hr, a, p, img, styles, classes, fonts
-from htbuilder.units import percent, px
-from htbuilder.funcs import rgba, rgb
-
-
-def image(src_as_string, **style):
-    return img(src=src_as_string, style=styles(**style))
-
-
-def link(link, text, **style):
-    return a(_href=link, _target="_blank", style=styles(**style))(text)
-
-
-def layout(*args):
-
-    style = """
-    <style>
-      # MainMenu {visibility: hidden;}
-      footer {visibility: hidden;}
-     .stApp { bottom: 105px; }
-    </style>
-    """
-
-    style_div = styles(
-        position="fixed",
-        left=0,
-        bottom=0,
-        margin=px(0, 0, 0, 0),
-        width=percent(100),
-        color="black",
-        text_align="center",
-        height="auto",
-        opacity=1
-    )
-
-    style_hr = styles(
-        display="block",
-        margin=px(8, 8, "auto", "auto"),
-        border_style="inset",
-        border_width=px(2)
-    )
-
-    body = p()
-    foot = div(
-        style=style_div
-    )(
-        hr(
-            style=style_hr
-        ),
-        body
-    )
-
-    st.markdown(style, unsafe_allow_html=True)
-
-    for arg in args:
-        if isinstance(arg, str):
-            body(arg)
-
-        elif isinstance(arg, HtmlElement):
-            body(arg)
-
-    st.markdown(str(foot), unsafe_allow_html=True)
-
-
