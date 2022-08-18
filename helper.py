@@ -117,3 +117,24 @@ def country_multiple_medalist(df, country):
     multiple_medalist = multiple_medalist.rename(columns={"index": "Name", "Name_x": "Medals"})
 
     return multiple_medalist
+
+
+def weight_vs_height(df, sports):
+    athlete_df = df.drop_duplicates(subset=['Name', 'region'])
+    athlete_df['Medal'].fillna('No Medal', inplace=True)
+    if sports != 'Overall':
+        temp_df = athlete_df[athlete_df['Sport'] == sports]
+        return temp_df
+    else:
+        return athlete_df
+
+
+def Men_vs_Women(df):
+    athlete_df = df.drop_duplicates(subset=['Name', 'region'])
+    Men = athlete_df[athlete_df['Sex'] == 'M'].groupby('Year').count()['Name'].reset_index()
+    Women = athlete_df[athlete_df['Sex'] == 'F'].groupby('Year').count()['Name'].reset_index()
+    Final = Men.merge(Women, on='Year', how='left')
+    Final.rename(columns={'Name_x': 'Men', 'Name_y': 'Women'}, inplace=True)
+    Final.fillna(0, inplace=True)
+
+    return Final

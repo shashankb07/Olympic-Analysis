@@ -156,6 +156,20 @@ if user_menu == 'Athlete-wise Analysis':
     st.title("Distribution of Players Age With respect to Sports(Gold Medalist)")
     st.plotly_chart(fig)
 
+    sports_list = df['Sport'].unique().tolist()
+    sports_list.sort()
+    sports_list.insert(0, 'Overall')
+    st.title('Medal distribution based on Height And Weight')
+    selected_sport = st.selectbox('Select a Sport', sports_list)
+    temp_df = helper.weight_vs_height(df, selected_sport)
+    fig, ax = plt.subplots()
+    ax = sns.scatterplot(temp_df['Weight'], temp_df['Height'],hue=temp_df["Medal"], style= temp_df['Sex'], s = 100)
+    st.pyplot(fig)
+
+    st.title('Men vs Women Participation over years')
+    final_df = helper.Men_vs_Women(df)
+    fig = px.line(final_df, x='Year', y=['Men', 'Women'])
+    st.plotly_chart(fig)
 hide_st_style = """
             <style>
             #MainMenu {visibility: hidden;}
@@ -164,3 +178,5 @@ hide_st_style = """
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
+
+
