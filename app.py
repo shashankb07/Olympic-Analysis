@@ -4,7 +4,8 @@ import plotly.express as px
 import seaborn as sns
 from matplotlib import pyplot as plt
 import plotly.figure_factory as ff
-
+import warnings
+warnings.filterwarnings("ignore")
 
 import helper
 import preprocessor
